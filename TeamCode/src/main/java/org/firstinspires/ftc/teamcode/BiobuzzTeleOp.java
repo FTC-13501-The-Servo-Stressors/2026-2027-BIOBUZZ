@@ -20,7 +20,6 @@
  *   SOFTWARE.
  */
 
-
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
@@ -33,10 +32,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-
 /*
- * This file includes a teleop (driver-controlled) file for the goBILDA® StarterBot for the
- * 2026-2027 FIRST® Tech Challenge. It leverages a differential/Skid-Steer system for robot mobility,
+ * This file includes a teleop (driver-controlled) file for the goBILDA® StarterBot with Mecanum
+ * Wheels for the 2026-2027 FIRST® Tech Challenge. On top of a mecanum wheel drivetrain, it uses
  * one motor driving an intake roller, two servos which pull elements out of corners, and a high-speed
  * launcher motor.
  *
@@ -49,18 +47,21 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  * we will also need to adjust the "PIDF" coefficients with some that are a better fit for our application.
  */
 
-@TeleOp(name = "BioBuzz StarterBot Teleop", group = "StarterBot")
+@TeleOp(name = "Mec BioBuzz StarterBot Teleop", group = "StarterBot")
 //@Disabled
 public class BiobuzzTeleOp extends OpMode {
 
     // Declare OpMode members.
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor leftfrontDrive = null;
+    private DcMotor leftbackDrive = null;
+    private DcMotor rightfrontDrive = null;
+    private DcMotor rightbackDrive = null;
     private DcMotorEx launcher = null;
     private DcMotor intake = null;
     private CRServo leftIntakeServo = null;
     private CRServo rightIntakeServo = null;
     private CRServo windmillServo = null;
+
 
     /*
      * These two variables are used to control the velocity of the launcher motor.
@@ -72,16 +73,19 @@ public class BiobuzzTeleOp extends OpMode {
      * in the launch() function to only run the windmill servo when the motor is spinning fast
      * enough to make a successful throw.
      */
-    public final int LAUNCHER_TARGET_VELOCITY = 1250;
-    public final int LAUNCHER_MIN_VELOCITY = 1200;
+    public final int LAUNCHER_TARGET_VELOCITY = 1250; //2678 RPM
+    public final int LAUNCHER_MIN_VELOCITY = 1200; //2571 RPM
+
 
     /*
-     * These two variables store the power we need to apply to the motors. In other cases, we may
-     * choose to declare these variables inside the arcadeDrive() function, instead we declare them
+     * These four variables store the power we need to apply to the motors. In other cases, we may
+     * choose to declare these variables inside the mecanumDrive() function, instead we declare them
      * here so that we can access them in our main loop for telemetry.
      */
-    double leftPower;
-    double rightPower;
+    double leftFrontPower;
+    double rightFrontPower;
+    double leftBackPower;
+    double rightBackPower;
 
     // Create a variable to set to the intake.
     double intakePower;
@@ -97,13 +101,15 @@ public class BiobuzzTeleOp extends OpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step.
          */
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftfrontDrive = hardwareMap.get(DcMotor.class, "leftfrontDrive");
+        rightfrontDrive = hardwareMap.get(DcMotor.class, "rightfrontDrive");
+        leftbackDrive = hardwareMap.get(DcMotor.class, "leftbackDrive");
+        rightbackDrive = hardwareMap.get(DcMotor.class, "rightbackDrive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
-        windmillServo = hardwareMap.get(CRServo.class, "windmill");
-        leftIntakeServo = hardwareMap.get(CRServo.class, "left_intake_servo");
-        rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake_servo");
+        windmillServo = hardwareMap.get(CRServo.class, "windmillServo");
+        leftIntakeServo = hardwareMap.get(CRServo.class, "leftIntakeServo");
+        rightIntakeServo = hardwareMap.get(CRServo.class, "rightIntakeServo");
 
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
@@ -112,16 +118,20 @@ public class BiobuzzTeleOp extends OpMode {
          * Note: The settings here assume direct drive on left and right wheels. Gear
          * Reduction or 90 Deg drives may require direction flips
          */
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftfrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightfrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftbackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightbackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         /*
          * Setting zeroPowerBehavior to BRAKE enables a "brake mode". This causes the motor to
          * slow down much faster when it is coasting. This creates a much more controllable
          * drivetrain. As the robot stops much quicker.
          */
-        leftDrive.setZeroPowerBehavior(BRAKE);
-        rightDrive.setZeroPowerBehavior(BRAKE);
+        leftfrontDrive.setZeroPowerBehavior(BRAKE);
+        rightfrontDrive.setZeroPowerBehavior(BRAKE);
+        leftbackDrive.setZeroPowerBehavior(BRAKE);
+        rightbackDrive.setZeroPowerBehavior(BRAKE);
         intake.setZeroPowerBehavior(BRAKE);
 
         /*
@@ -131,6 +141,7 @@ public class BiobuzzTeleOp extends OpMode {
          * into the port right beside the motor itself. And that the motors polarity is consistent
          * through any wiring.
          */
+
         launcher.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(40, 0, 0, 12.5));
@@ -146,7 +157,9 @@ public class BiobuzzTeleOp extends OpMode {
          * Much like our drivetrain motors, we set the right intake servo to reverse so that both
          * servos work to pull elements into the intake.
          */
+
         rightIntakeServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         /*
@@ -175,15 +188,16 @@ public class BiobuzzTeleOp extends OpMode {
     @Override
     public void loop() {
         /*
-         * Here we call a function called arcadeDrive. The arcadeDrive function takes the input from
-         * the joysticks, and applies power to the left and right drive motor to move the robot
-         * as requested by the driver. "arcade" refers to the control style we're using here.
-         * Much like a classic arcade game, when you move the left joystick forward both motors
-         * work to drive the robot forward, and when you move the right joystick left and right
-         * both motors work to rotate the robot. Combinations of these inputs can be used to create
-         * more complex maneuvers.
+         * Here we call a function called mecanumDrive. The mecanumDrive function takes the input from
+         * the joysticks, and applies power to the drive motors to move the robot as requested
+         * by the driver. Moving the left joystick forwards/back moves all motors forwards/back,
+         * moving the right joystick left/right rotates the robot clockwise or counterclockwise,
+         * and moving the left joystick left moves the motors in the right way to create a sideways
+         * "strafe" movement. Combinations of these inputs can be used to create more complex maneuvers.
+         * Note, moving the joystick forward on most gamepads results in a negative signal, so
+         * we invert it before passing it to the function.
          */
-        arcadeDrive(-gamepad1.left_stick_y, gamepad1.right_stick_x);
+        mecanumDrive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         /*
          * Set the intake power variable to equal the right trigger, minus the left trigger.
@@ -199,11 +213,8 @@ public class BiobuzzTeleOp extends OpMode {
          */
         intakePower = gamepad1.right_trigger - gamepad1.left_trigger;
 
-        /*
-         * The launch() function handles setting motor velocity, and running the windmill servo
-         * to feed the elements into the launcher wheel.
-         */
         launch();
+        overridelaunch();
 
         /*
          * Here we set our intake motor and servos to their intake power. The order of operations
@@ -212,16 +223,18 @@ public class BiobuzzTeleOp extends OpMode {
          * change the intake power. So we need to give our launch function a chance to modify the
          * variable before we write it to our motor and servos.
          */
+
         intake.setPower(intakePower);
         leftIntakeServo.setPower(intakePower);
+        leftIntakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
         rightIntakeServo.setPower(intakePower);
 
         /*
          * Show motor powers on the Driver Station via telemetry.
          */
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-        telemetry.addLine();
-
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftFrontPower, rightFrontPower);
+        telemetry.addData("Triggers", "left (%.2f, right (%.2f)",gamepad1.left_trigger, gamepad1.right_trigger);
+        telemetry.addData("Launcher","(%.2f)", launcher.getVelocity());
     }
 
     /*
@@ -231,17 +244,37 @@ public class BiobuzzTeleOp extends OpMode {
     public void stop() {
     }
 
-    void arcadeDrive(double forward, double rotate) {
-        leftPower = forward + rotate;
-        rightPower = forward - rotate;
+    void mecanumDrive(double forward, double strafe, double rotate) {
+        leftFrontPower = forward + strafe + rotate;
+        rightFrontPower = forward - strafe - rotate;
+        leftBackPower = forward - strafe + rotate;
+        rightBackPower = forward + strafe - rotate;
+
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
 
         /*
-         * Send calculated power to motors
+         * Send calculated power to wheels
          */
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        leftfrontDrive.setPower(leftFrontPower);
+        rightfrontDrive.setPower(rightFrontPower);
+        leftbackDrive.setPower(leftBackPower);
+        rightbackDrive.setPower(rightBackPower);
     }
-
+    void overridelaunch() {
+        if (gamepad1.y) {
+            windmillServo.setPower(1);
+            intakePower += 0.5;
+        }
+    }
     void launch() {
         /*
          * Calling gamepad1.right_bumper returns a boolean which will be true if the bumper is
@@ -271,6 +304,4 @@ public class BiobuzzTeleOp extends OpMode {
             windmillServo.setPower(0);
         }
     }
-
-
 }
