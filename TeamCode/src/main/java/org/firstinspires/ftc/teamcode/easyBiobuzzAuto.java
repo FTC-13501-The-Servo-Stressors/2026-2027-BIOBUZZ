@@ -168,7 +168,7 @@ public class easyBiobuzzAuto extends OpMode
             rightfrontDrive.setPower(0.5);
             rightbackDrive.setPower(0.5);
         try {
-            Thread.sleep(800);
+            Thread.sleep(600);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
