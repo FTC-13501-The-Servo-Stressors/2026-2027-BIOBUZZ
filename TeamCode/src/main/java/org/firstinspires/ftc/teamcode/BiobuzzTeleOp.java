@@ -215,6 +215,7 @@ public class BiobuzzTeleOp extends OpMode {
 
         launch();
         overridelaunch();
+        reversewindmill();
 
         /*
          * Here we set our intake motor and servos to their intake power. The order of operations
@@ -302,6 +303,14 @@ public class BiobuzzTeleOp extends OpMode {
             intakePower += 0.5;
         } else {
             windmillServo.setPower(0);
+        }
+    }
+    void reversewindmill() {
+        if(gamepad1.x) {
+            windmillServo.setDirection(DcMotorSimple.Direction.FORWARD);
+            windmillServo.setPower(1);
+        } else {
+            windmillServo.setDirection(DcMotorSimple.Direction.REVERSE);
         }
     }
 }

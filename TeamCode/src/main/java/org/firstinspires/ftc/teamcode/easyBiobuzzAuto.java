@@ -113,10 +113,10 @@ public class easyBiobuzzAuto extends OpMode
         /*
          * Here we reset the encoders on our drive motors before we start moving.
          */
-        leftfrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftbackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightbackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightfrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftfrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        leftbackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightbackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightfrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         /*
          * Setting zeroPowerBehavior to BRAKE enables a "brake mode." This causes the motor to
@@ -179,8 +179,6 @@ public class easyBiobuzzAuto extends OpMode
         }
 
         telemetry.addData("Auto Timer", autoTimer.seconds());
-        telemetry.addData("Motor Current Positions", "left (%d), right (%d)",
-                leftfrontDrive.getCurrentPosition(), rightbackDrive.getCurrentPosition());
         telemetry.update();
     }
 }
