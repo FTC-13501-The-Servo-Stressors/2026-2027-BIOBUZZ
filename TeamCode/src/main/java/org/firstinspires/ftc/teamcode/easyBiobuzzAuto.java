@@ -162,21 +162,35 @@ public class easyBiobuzzAuto extends OpMode
     @Override
     public void start() {
         autoTimer.reset();
+
+            leftfrontDrive.setPower(0.5);
+            leftbackDrive.setPower(0.5);
+            rightfrontDrive.setPower(0.5);
+            rightbackDrive.setPower(0.5);
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(0.0);
+            leftbackDrive.setPower(0.0);
+            rightfrontDrive.setPower(0.0);
+            rightbackDrive.setPower(0.0);
     }
     @Override
     public void loop() {
         // Drive forward for 1.5 seconds at DRIVE_SPEED (0.5), then stop
-        if (autoTimer.seconds() < 1.5) {
-            leftfrontDrive.setPower(1);
-            leftbackDrive.setPower(1);
-            rightfrontDrive.setPower(1);
-            rightbackDrive.setPower(1);
-        } else {
-            leftfrontDrive.setPower(0.0);
-            leftbackDrive.setPower(0.0);
-            rightfrontDrive.setPower(0.0);
-            rightbackDrive.setPower(0.0);
-        }
+//        if (autoTimer.seconds() < 1.5) {
+//            leftfrontDrive.setPower(1);
+//            leftbackDrive.setPower(1);
+//            rightfrontDrive.setPower(1);
+//            rightbackDrive.setPower(1);
+//        } else {
+//            leftfrontDrive.setPower(0.0);
+//            leftbackDrive.setPower(0.0);
+//            rightfrontDrive.setPower(0.0);
+//            rightbackDrive.setPower(0.0);
+//        }
 
         telemetry.addData("Auto Timer", autoTimer.seconds());
         telemetry.update();
