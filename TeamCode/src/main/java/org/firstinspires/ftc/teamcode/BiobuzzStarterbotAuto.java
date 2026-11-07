@@ -64,7 +64,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name="StarterBotAuto", group="StarterBot")
 //@Disabled
-public class BiobuzzAuto extends OpMode
+public class BiobuzzStarterbotAuto extends OpMode
 {
     /*
      * These two variables are used to control the velocity of the launcher motor.
@@ -107,8 +107,10 @@ public class BiobuzzAuto extends OpMode
     private ElapsedTime autoTimer = new ElapsedTime();
 
     // Declare OpMode members.
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor leftfrontDrive = null;
+    private DcMotor leftbackDrive = null;
+    private DcMotor rightfrontDrive = null;
+    private DcMotor rightbackDrive = null;
     private DcMotorEx launcher = null;
     private DcMotor intake = null;
     private CRServo leftIntakeServo = null;
@@ -159,13 +161,15 @@ public class BiobuzzAuto extends OpMode
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the driver's station).
          */
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftfrontDrive = hardwareMap.get(DcMotor.class, "leftfrontDrive");
+        rightbackDrive = hardwareMap.get(DcMotor.class, "rightfrontDrive");
+        leftbackDrive = hardwareMap.get(DcMotor.class, "leftbackDrive");
+        rightbackDrive = hardwareMap.get(DcMotor.class, "rightbackDrive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
-        windmillServo = hardwareMap.get(CRServo.class, "windmill");
-        leftIntakeServo = hardwareMap.get(CRServo.class, "left_intake_servo");
-        rightIntakeServo = hardwareMap.get(CRServo.class, "right_intake_servo");
+        windmillServo = hardwareMap.get(CRServo.class, "windmillServo");
+        leftIntakeServo = hardwareMap.get(CRServo.class, "leftIntakeServo");
+        rightIntakeServo = hardwareMap.get(CRServo.class, "rightIntakeServo");
 
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
@@ -174,22 +178,22 @@ public class BiobuzzAuto extends OpMode
          * Note: The settings here assume direct drive on left and right wheels. Gear
          * Reduction or 90 Deg drives may require direction flips
          */
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftfrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightbackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /*
          * Here we reset the encoders on our drive motors before we start moving.
          */
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftfrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightbackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         /*
          * Setting zeroPowerBehavior to BRAKE enables a "brake mode." This causes the motor to
          * slow down much faster when it is coasting. This creates a much more controllable
          * drivetrain, as the robot stops much quicker.
          */
-        leftDrive.setZeroPowerBehavior(BRAKE);
-        rightDrive.setZeroPowerBehavior(BRAKE);
+        leftfrontDrive.setZeroPowerBehavior(BRAKE);
+        rightbackDrive.setZeroPowerBehavior(BRAKE);
         intake.setZeroPowerBehavior(BRAKE);
 
         /*
@@ -282,9 +286,9 @@ public class BiobuzzAuto extends OpMode
          */
         telemetry.addData("AutoState", autonomousState);
         telemetry.addData("Motor Current Positions", "left (%d), right (%d)",
-                leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
+                leftfrontDrive.getCurrentPosition(), rightbackDrive.getCurrentPosition());
         telemetry.addData("Motor Target Positions", "left (%d), right (%d)",
-                leftDrive.getTargetPosition(), rightDrive.getTargetPosition());
+                leftfrontDrive.getTargetPosition(), rightbackDrive.getTargetPosition());
         telemetry.update();
     }
 
@@ -331,14 +335,14 @@ public class BiobuzzAuto extends OpMode
          */
         double targetPosition = (distanceUnit.toMm(distance) * TICKS_PER_MM);
 
-        leftDrive.setTargetPosition((int) targetPosition);
-        rightDrive.setTargetPosition((int) targetPosition);
+        leftfrontDrive.setTargetPosition((int) targetPosition);
+        rightbackDrive.setTargetPosition((int) targetPosition);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftfrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightbackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftDrive.setPower(speed);
-        rightDrive.setPower(speed);
+        leftfrontDrive.setPower(speed);
+        rightbackDrive.setPower(speed);
 
         /*
          * Here we check if we are within tolerance of our target position or not. We calculate the
@@ -347,7 +351,7 @@ public class BiobuzzAuto extends OpMode
          * the driveTimer. Only after we reach the target can the timer count higher than our
          * holdSeconds variable.
          */
-        if(Math.abs(targetPosition - leftDrive.getCurrentPosition()) > (TOLERANCE_MM * TICKS_PER_MM)){
+        if(Math.abs(targetPosition - leftfrontDrive.getCurrentPosition()) > (TOLERANCE_MM * TICKS_PER_MM)){
             driveTimer.reset();
         }
 
@@ -383,16 +387,16 @@ public class BiobuzzAuto extends OpMode
         double leftTargetPosition = -(targetMm*TICKS_PER_MM);
         double rightTargetPosition = targetMm*TICKS_PER_MM;
 
-        leftDrive.setTargetPosition((int) leftTargetPosition);
-        rightDrive.setTargetPosition((int) rightTargetPosition);
+        leftfrontDrive.setTargetPosition((int) leftTargetPosition);
+        rightbackDrive.setTargetPosition((int) rightTargetPosition);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftfrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightbackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftDrive.setPower(speed);
-        rightDrive.setPower(speed);
+        leftfrontDrive.setPower(speed);
+        rightbackDrive.setPower(speed);
 
-        if((Math.abs(leftTargetPosition - leftDrive.getCurrentPosition())) > (TOLERANCE_MM * TICKS_PER_MM)){
+        if((Math.abs(leftTargetPosition - leftfrontDrive.getCurrentPosition())) > (TOLERANCE_MM * TICKS_PER_MM)){
             driveTimer.reset();
         }
 
