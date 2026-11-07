@@ -167,10 +167,10 @@ public class easyBiobuzzAuto extends OpMode
     public void loop() {
         // Drive forward for 1.5 seconds at DRIVE_SPEED (0.5), then stop
         if (autoTimer.seconds() < 1.5) {
-            leftfrontDrive.setPower(DRIVE_SPEED);
-            leftbackDrive.setPower(DRIVE_SPEED);
-            rightfrontDrive.setPower(DRIVE_SPEED);
-            rightbackDrive.setPower(DRIVE_SPEED);
+            leftfrontDrive.setPower(1);
+            leftbackDrive.setPower(1);
+            rightfrontDrive.setPower(1);
+            rightbackDrive.setPower(1);
         } else {
             leftfrontDrive.setPower(0.0);
             leftbackDrive.setPower(0.0);
