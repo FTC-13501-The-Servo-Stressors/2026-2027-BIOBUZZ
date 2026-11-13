@@ -164,35 +164,71 @@ public class shootauto extends OpMode
         autoTimer.reset();
         launcher.setVelocity(1210);
         try {
-            Thread.sleep(550);
+            Thread.sleep(1250);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         intake.setPower(0.5);
         windmillServo.setPower(1);
         try {
-            Thread.sleep(1850);
+            Thread.sleep(3850);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         intake.setPower(0);
         windmillServo.setPower(0);
         launcher.setPower(0);
-        leftfrontDrive.setPower(DRIVE_SPEED);
-        leftbackDrive.setPower(DRIVE_SPEED);
-        rightfrontDrive.setPower(DRIVE_SPEED);
-        rightbackDrive.setPower(DRIVE_SPEED);
+        leftfrontDrive.setPower(-.05);
+        leftbackDrive.setPower(-.06);
+        rightfrontDrive.setPower(-.05);
+        rightbackDrive.setPower(-.05);
         try {
-            Thread.sleep(2750);
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(-.1);
+        leftbackDrive.setPower(-.11);
+        rightfrontDrive.setPower(-.1);
+        rightbackDrive.setPower(-.1);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(-.25);
+        leftbackDrive.setPower(-.26);
+        rightfrontDrive.setPower(-.25);
+        rightbackDrive.setPower(-.25);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(-.35);
+        leftbackDrive.setPower(-.36);
+        rightfrontDrive.setPower(-.35);
+        rightbackDrive.setPower(-.35);
+        try {
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         leftfrontDrive.setPower(-DRIVE_SPEED);
-        leftbackDrive.setPower(DRIVE_SPEED);
-        rightfrontDrive.setPower(DRIVE_SPEED);
+        leftbackDrive.setPower(-DRIVE_SPEED+.01);
+        rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(-DRIVE_SPEED);
         try {
-            Thread.sleep(1825);
+            Thread.sleep(2900);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(DRIVE_SPEED);
+        leftbackDrive.setPower(-DRIVE_SPEED);
+        rightfrontDrive.setPower(-DRIVE_SPEED);
+        rightbackDrive.setPower(DRIVE_SPEED);
+        try {
+            Thread.sleep(2825);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -217,7 +253,8 @@ public class shootauto extends OpMode
 //            rightbackDrive.setPower(0.0);
 //        }
 
-        telemetry.addData("Auto Timer", autoTimer.seconds());
-        telemetry.update();
+//        telemetry.addData("Auto Timer", autoTimer.seconds());
+//        telemetry.addData("Launcher", "%.2f", launcher.getVelocity());
+//        telemetry.update();
     }
 }
