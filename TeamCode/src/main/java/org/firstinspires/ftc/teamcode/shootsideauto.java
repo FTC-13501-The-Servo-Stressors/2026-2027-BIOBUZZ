@@ -189,35 +189,39 @@ public class shootsideauto extends OpMode
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        leftfrontDrive.setPower(.25);
         leftbackDrive.setPower(-.275);
         rightfrontDrive.setPower(-.25);
+        rightbackDrive.setPower(.25);
         try {
-            Thread.sleep(100);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        leftfrontDrive.setPower(-.35);
         leftbackDrive.setPower(-.375);
         rightfrontDrive.setPower(-.35);
+        rightbackDrive.setPower(-.35);
         try {
-            Thread.sleep(200);
+            Thread.sleep(1200);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         leftfrontDrive.setPower(-DRIVE_SPEED);
-        leftbackDrive.setPower(-DRIVE_SPEED+.025);
+        leftbackDrive.setPower(-DRIVE_SPEED-.025);
         rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(-DRIVE_SPEED);
         try {
-            Thread.sleep(2570);
+            Thread.sleep(2470);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         leftfrontDrive.setPower(DRIVE_SPEED);
-        leftbackDrive.setPower(-DRIVE_SPEED+.025);
+        leftbackDrive.setPower(-DRIVE_SPEED-.025);
         rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(DRIVE_SPEED);
         try {
-            Thread.sleep(1825);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

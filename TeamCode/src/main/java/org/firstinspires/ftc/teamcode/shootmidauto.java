@@ -212,7 +212,7 @@ public class shootmidauto extends OpMode
             throw new RuntimeException(e);
         }
         leftfrontDrive.setPower(-DRIVE_SPEED);
-        leftbackDrive.setPower(-DRIVE_SPEED+.025);
+        leftbackDrive.setPower(-DRIVE_SPEED-.025);
         rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(-DRIVE_SPEED);
         try {
@@ -221,7 +221,7 @@ public class shootmidauto extends OpMode
             throw new RuntimeException(e);
         }
         leftfrontDrive.setPower(DRIVE_SPEED);
-        leftbackDrive.setPower(-DRIVE_SPEED+.025);
+        leftbackDrive.setPower(-DRIVE_SPEED-.025);
         rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(DRIVE_SPEED);
         try {
