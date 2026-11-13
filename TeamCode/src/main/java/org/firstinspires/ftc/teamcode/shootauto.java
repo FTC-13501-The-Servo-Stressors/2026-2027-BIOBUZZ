@@ -175,6 +175,9 @@ public class shootauto extends OpMode
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        intake.setPower(0);
+        windmillServo.setPower(0);
+        launcher.setPower(0);
         leftfrontDrive.setPower(DRIVE_SPEED);
         leftbackDrive.setPower(DRIVE_SPEED);
         rightfrontDrive.setPower(DRIVE_SPEED);
