@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name="shoot auto thru side", group="StarterBot")
-public class shootsideauto extends OpMode
+@Autonomous (name="shoot auto thru middle flower side corner", group="StarterBot")
+public class shootmidautoflowerside extends OpMode
 {
 
     /*
@@ -44,8 +44,7 @@ public class shootsideauto extends OpMode
     final double ENCODER_TICKS_PER_REV = 537.7;
     final double TICKS_PER_MM = (ENCODER_TICKS_PER_REV / (WHEEL_DIAMETER_MM * Math.PI));
     final double TRACK_WIDTH_MM = 402;
-    final double drift_constant = .96;
-
+    final double drift_constant = .9575;
 
     // Create a variable to set to the intake.
     double intakePower = 0;
@@ -162,7 +161,7 @@ public class shootsideauto extends OpMode
         autoTimer.reset();
         launcher.setVelocity(1220);
         try {
-            Thread.sleep(1250);
+            Thread.sleep(1850);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -212,39 +211,30 @@ public class shootsideauto extends OpMode
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        leftfrontDrive.setPower(-.3);
-        leftbackDrive.setPower(-.3*drift_constant);
-        rightfrontDrive.setPower(-.3);
-        rightbackDrive.setPower(-.3);
-        try {
-            Thread.sleep(550);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        leftfrontDrive.setPower(.3);
-        leftbackDrive.setPower(-.3*drift_constant);
-        rightfrontDrive.setPower(-.3);
-        rightbackDrive.setPower(.3);
-        try {
-            Thread.sleep(2650);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         leftfrontDrive.setPower(-.1);
         leftbackDrive.setPower(-.1*drift_constant);
         rightfrontDrive.setPower(-.1);
         rightbackDrive.setPower(-.1);
         try {
-            Thread.sleep(50);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        leftfrontDrive.setPower(-.3);
-        leftbackDrive.setPower(-.3*drift_constant);
-        rightfrontDrive.setPower(-.3);
-        rightbackDrive.setPower(-.3);
+        leftfrontDrive.setPower(-.25);
+        leftbackDrive.setPower(-.25*drift_constant);
+        rightfrontDrive.setPower(-.25);
+        rightbackDrive.setPower(-.25);
         try {
-            Thread.sleep(50);
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(-.35);
+        leftbackDrive.setPower(-.35*drift_constant);
+        rightfrontDrive.setPower(-.35);
+        rightbackDrive.setPower(-.35);
+        try {
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -252,8 +242,8 @@ public class shootsideauto extends OpMode
         leftbackDrive.setPower(-DRIVE_SPEED*drift_constant);
         rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(-DRIVE_SPEED);
-        try {;
-        Thread.sleep(2975);
+        try {
+            Thread.sleep(2970);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -262,7 +252,25 @@ public class shootsideauto extends OpMode
         rightfrontDrive.setPower(-DRIVE_SPEED);
         rightbackDrive.setPower(DRIVE_SPEED);
         try {
-            Thread.sleep(666);
+            Thread.sleep(1125);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(DRIVE_SPEED);
+        leftbackDrive.setPower(DRIVE_SPEED*drift_constant);
+        rightfrontDrive.setPower(DRIVE_SPEED);
+        rightbackDrive.setPower(DRIVE_SPEED);
+        try {
+            Thread.sleep(422);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        leftfrontDrive.setPower(DRIVE_SPEED);
+        leftbackDrive.setPower(-DRIVE_SPEED*drift_constant);
+        rightfrontDrive.setPower(-DRIVE_SPEED);
+        rightbackDrive.setPower(DRIVE_SPEED);
+        try {
+            Thread.sleep(725);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

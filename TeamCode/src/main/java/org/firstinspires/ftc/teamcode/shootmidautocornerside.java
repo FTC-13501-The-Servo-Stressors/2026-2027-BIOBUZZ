@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name="shoot auto thru middle", group="StarterBot")
-public class shootmidauto extends OpMode
+@Autonomous (name="dont use midauto", group="StarterBot")
+public class shootmidautocornerside extends OpMode
 {
 
     /*
@@ -256,12 +256,12 @@ public class shootmidauto extends OpMode
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        leftfrontDrive.setPower(DRIVE_SPEED);
-        leftbackDrive.setPower(DRIVE_SPEED*drift_constant);
-        rightfrontDrive.setPower(DRIVE_SPEED);
-        rightbackDrive.setPower(DRIVE_SPEED);
+        leftfrontDrive.setPower(-DRIVE_SPEED);
+        leftbackDrive.setPower(-DRIVE_SPEED*drift_constant);
+        rightfrontDrive.setPower(-DRIVE_SPEED);
+        rightbackDrive.setPower(-DRIVE_SPEED);
         try {
-            Thread.sleep(422);
+            Thread.sleep(222);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
